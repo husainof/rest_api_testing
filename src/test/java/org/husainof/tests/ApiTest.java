@@ -6,11 +6,14 @@ import org.husainof.models.PokemonList;
 import org.husainof.utils.ConfigProvider;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 
 
+@Execution(ExecutionMode.CONCURRENT)
 public class ApiTest extends BaseApiTest {
 
     @Test
