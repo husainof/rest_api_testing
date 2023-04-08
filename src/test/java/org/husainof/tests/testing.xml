@@ -1,0 +1,9 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Parallel_Testing" parallel="methods" thread-count="2">
+    <test thread-count="2" name = "Test" parallel = "methods">
+        <classes>
+            <class name = "org.husainof.tests.ApiTest" />
+        </classes>
+    </test>
+</suite>
