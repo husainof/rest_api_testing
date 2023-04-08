@@ -1,64 +1,59 @@
 package org.husainof.tests;
 
-import groovy.json.JsonParser;
-import io.restassured.path.json.JsonPath;
-import io.restassured.response.Response;
-import org.hamcrest.Matchers;
 import org.husainof.core.BaseApiTest;
+import org.husainof.models.Pokemon;
+import org.husainof.models.PokemonList;
+import org.husainof.utils.ConfigProvider;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.testng.Assert;
 
-import java.util.List;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 
-import static org.hamcrest.Matchers.*;
 
 public class ApiTest extends BaseApiTest {
 
     @Test
     public void checkPokemonDataLogic() {
-        Response response =  requestSpecification
+
+        Pokemon rattata =  requestSpecification
                 .when()
                     .get("rattata")
                 .then()
                     .statusCode(200)
-                    .log().all()
-                    .body("name", Matchers.equalTo("rattata"))
+                    .body("name", equalTo("rattata"))
                     .extract()
-                    .response();
+                    .as(Pokemon.class);
+
+        Pokemon pidgeotto =  requestSpecification
+                .when()
+                    .get("pidgeotto")
+                .then()
+                    .statusCode(200)
+                    .body("name", equalTo("pidgeotto"))
+                    .extract()
+                    .as(Pokemon.class);
+
+        Assertions.assertTrue(rattata.getWeight() < pidgeotto.getWeight());
+        Assertions.assertTrue(rattata.getAbilityNames().contains("run-away"));
     }
 
     @Test
-    public void checkLimitPokemonData() {
-        Integer limit = 10;
+    public void checkPokemonNameExist() {
 
-        requestSpecification
+        Integer limit = ConfigProvider.readConfig().getInt("limit");
+
+        PokemonList pokemonList =  requestSpecification
                     .params("limit", limit)
                     .params("offset", 0)
                 .when()
                     .get()
                 .then()
                     .statusCode(200)
-                    .body("results", hasSize(limit));
-    }
+                    .body("results.name", hasSize(limit))
+                    .extract()
+                    .as(PokemonList.class);
 
-    @Test
-    public void checkPokemonNameExist() {
-        Integer limit = 10;
-
-        Response response =  requestSpecification
-                .params("limit", limit)
-                .params("offset", 0)
-                .when()
-                .get()
-                .then()
-                .statusCode(200)
-                .body("results.name", hasSize(limit))
-                .extract()
-                .response();
-
-        JsonPath jsonPath = response.jsonPath();
-        List<String> pokemonNameList = jsonPath.get("results.name");
-
-        Assert.assertTrue(pokemonNameList.stream().allMatch(x -> !x.isEmpty()));
+        Assertions.assertTrue(pokemonList.getPokemonNames().stream().allMatch(name -> !name.isEmpty()));
     }
 }
