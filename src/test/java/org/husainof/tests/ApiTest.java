@@ -21,7 +21,7 @@ public class ApiTest extends BaseApiTest {
     public void checkPokemonDataLogic() {
 
         Pokemon rattata =  RestAssured.given(requestSpec)
-                .filter(new AllureRestAssured())
+                    .filter(new AllureRestAssured())
                 .when()
                     .get("rattata")
                 .then()
@@ -31,7 +31,7 @@ public class ApiTest extends BaseApiTest {
                     .as(Pokemon.class);
 
         Pokemon pidgeotto =  RestAssured.given(requestSpec)
-                .filter(new AllureRestAssured())
+                    .filter(new AllureRestAssured())
                 .when()
                     .get("pidgeotto")
                 .then()
