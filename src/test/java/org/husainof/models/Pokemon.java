@@ -38,16 +38,6 @@ public class Pokemon {
 }
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-class Ability{
-    @JsonProperty("name")
-    private String name;
-
-    public String getName() {
-        return name;
-    }
-}
-
-@JsonIgnoreProperties(ignoreUnknown = true)
 class AbilityData{
     @JsonProperty("ability")
     private Ability ability;

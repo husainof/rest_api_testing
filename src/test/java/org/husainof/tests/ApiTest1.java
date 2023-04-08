@@ -1,5 +1,6 @@
 package org.husainof.tests;
 
+
 import io.qameta.allure.Description;
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
@@ -14,31 +15,31 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 
 
-public class ApiTest extends BaseApiTest {
+public class ApiTest1 extends BaseApiTest {
 
     @Test
     @Description("Проверка логики данных покемонов: вес rattata больше, чем у pidgeotto.")
     public void checkWeightComparison() {
 
         Pokemon rattata =  RestAssured.given(requestSpec)
-                    .filter(new AllureRestAssured())
+                .filter(new AllureRestAssured())
                 .when()
-                    .get("rattata")
+                .get("rattata")
                 .then()
-                    .statusCode(200)
-                    .body("name", equalTo("rattata"))
-                    .extract()
-                    .as(Pokemon.class);
+                .statusCode(200)
+                .body("name", equalTo("rattata"))
+                .extract()
+                .as(Pokemon.class);
 
         Pokemon pidgeotto =  RestAssured.given(requestSpec)
-                    .filter(new AllureRestAssured())
+                .filter(new AllureRestAssured())
                 .when()
-                    .get("pidgeotto")
+                .get("pidgeotto")
                 .then()
-                    .statusCode(200)
-                    .body("name", equalTo("pidgeotto"))
-                    .extract()
-                    .as(Pokemon.class);
+                .statusCode(200)
+                .body("name", equalTo("pidgeotto"))
+                .extract()
+                .as(Pokemon.class);
 
         Assert.assertTrue(rattata.getWeight() < pidgeotto.getWeight());
     }
@@ -71,7 +72,7 @@ public class ApiTest extends BaseApiTest {
     }
 
     @Test
-    @Description("Проверка ограниченности списка покемонов.")
+    @Description("Проверка ограниченности списка покемонов и существование их имён.")
     public void checkPageLimit() {
 
         Integer limit10 = 10;
@@ -110,22 +111,22 @@ public class ApiTest extends BaseApiTest {
     }
 
     @Test
-    @Description("Проверка существование их имён покемонов.")
+    @Description("Проверка ограниченности списка покемонов и существование их имён.")
     public void checkPokemonNameExist() {
 
         Integer limit = 10;
 
         PokemonList pokemonList =  RestAssured.given(requestSpec)
-                    .filter(new AllureRestAssured())
-                    .params("limit", limit)
-                    .params("offset", 0)
+                .filter(new AllureRestAssured())
+                .params("limit", limit)
+                .params("offset", 0)
                 .when()
-                    .get()
+                .get()
                 .then()
-                    .statusCode(200)
-                    .body("results.name", hasSize(limit))
-                    .extract()
-                    .as(PokemonList.class);
+                .statusCode(200)
+                .body("results.name", hasSize(limit))
+                .extract()
+                .as(PokemonList.class);
 
         Assert.assertTrue(pokemonList.getPokemonNames().stream().allMatch(name -> !name.isEmpty()));
     }
