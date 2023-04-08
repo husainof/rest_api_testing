@@ -1,25 +1,27 @@
 package org.husainof.tests;
 
+import io.qameta.allure.Description;
+import io.qameta.allure.restassured.AllureRestAssured;
+import io.restassured.RestAssured;
 import org.husainof.core.BaseApiTest;
 import org.husainof.models.Pokemon;
 import org.husainof.models.PokemonList;
 import org.husainof.utils.ConfigProvider;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 
 
-@Execution(ExecutionMode.CONCURRENT)
 public class ApiTest extends BaseApiTest {
 
     @Test
+    @Description("Проверка логики данных покемонов: вес rattata больше, чем у pidgeotto; у rattata есть способность 'run-away'.")
     public void checkPokemonDataLogic() {
 
-        Pokemon rattata =  requestSpecification
+        Pokemon rattata =  RestAssured.given(requestSpec)
+                .filter(new AllureRestAssured())
                 .when()
                     .get("rattata")
                 .then()
@@ -28,7 +30,8 @@ public class ApiTest extends BaseApiTest {
                     .extract()
                     .as(Pokemon.class);
 
-        Pokemon pidgeotto =  requestSpecification
+        Pokemon pidgeotto =  RestAssured.given(requestSpec)
+                .filter(new AllureRestAssured())
                 .when()
                     .get("pidgeotto")
                 .then()
@@ -37,16 +40,18 @@ public class ApiTest extends BaseApiTest {
                     .extract()
                     .as(Pokemon.class);
 
-        Assertions.assertTrue(rattata.getWeight() < pidgeotto.getWeight());
-        Assertions.assertTrue(rattata.getAbilityNames().contains("run-away"));
+        Assert.assertTrue(rattata.getWeight() < pidgeotto.getWeight());
+        Assert.assertTrue(rattata.getAbilityNames().contains("run-away"));
     }
 
     @Test
+    @Description("Проверка ограниченности списка покемонов и существование их имён.")
     public void checkPokemonNameExist() {
 
         Integer limit = ConfigProvider.readConfig().getInt("limit");
 
-        PokemonList pokemonList =  requestSpecification
+        PokemonList pokemonList =  RestAssured.given(requestSpec)
+                    .filter(new AllureRestAssured())
                     .params("limit", limit)
                     .params("offset", 0)
                 .when()
@@ -57,6 +62,6 @@ public class ApiTest extends BaseApiTest {
                     .extract()
                     .as(PokemonList.class);
 
-        Assertions.assertTrue(pokemonList.getPokemonNames().stream().allMatch(name -> !name.isEmpty()));
+        Assert.assertTrue(pokemonList.getPokemonNames().stream().allMatch(name -> !name.isEmpty()));
     }
 }
