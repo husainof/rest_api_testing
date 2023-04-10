@@ -60,43 +60,23 @@ public class ApiTest extends BaseApiTest {
         Assert.assertTrue(rattata.getAbilityNames().contains("run-away"));
     }
 
-    @Test
+    @DataProvider(name = "limits")
+    public Object[] getLimits() {
+        return new Object[]{10, 20, 30};
+    }
+
+    @Test(dataProvider = "limits")
     @Description("Проверка ограниченности списка покемонов.")
-    public void checkPageLimit() {
-
-        Integer limit10 = 10;
-        Integer limit20 = 20;
-        Integer limit30 = 30;
-
+    public void checkPageLimit(int limit) {
         RestAssured.given(requestSpec)
                 .filter(new AllureRestAssured())
-                .params("limit", limit10)
+                .params("limit", limit)
                 .params("offset", 0)
                 .when()
                 .get()
                 .then()
                 .statusCode(200)
-                .body("results", hasSize(limit10));
-
-        RestAssured.given(requestSpec)
-                .filter(new AllureRestAssured())
-                .params("limit", limit20)
-                .params("offset", 0)
-                .when()
-                .get()
-                .then()
-                .statusCode(200)
-                .body("results", hasSize(limit20));
-
-        RestAssured.given(requestSpec)
-                .filter(new AllureRestAssured())
-                .params("limit", limit30)
-                .params("offset", 0)
-                .when()
-                .get()
-                .then()
-                .statusCode(200)
-                .body("results", hasSize(limit30));
+                .body("results", hasSize(limit));
     }
 
     @Test
