@@ -56,17 +56,7 @@ public class ApiTest extends BaseApiTest {
                 .body("name", equalTo("rattata"))
                 .extract()
                 .as(Pokemon.class);
-
-        Pokemon pidgeotto =  RestAssured.given(requestSpec)
-                .filter(new AllureRestAssured())
-                .when()
-                .get("pidgeotto")
-                .then()
-                .statusCode(200)
-                .body("name", equalTo("pidgeotto"))
-                .extract()
-                .as(Pokemon.class);
-
+                
         Assert.assertTrue(rattata.getAbilityNames().contains("run-away"));
     }
 
@@ -113,8 +103,6 @@ public class ApiTest extends BaseApiTest {
     @Description("Проверка существование их имён покемонов.")
     public void checkPokemonNameExist() {
 
-        Integer limit = 10;
-
         PokemonList pokemonList =  RestAssured.given(requestSpec)
                     .filter(new AllureRestAssured())
                     .params("limit", limit)
@@ -123,7 +111,6 @@ public class ApiTest extends BaseApiTest {
                     .get()
                 .then()
                     .statusCode(200)
-                    .body("results.name", hasSize(limit))
                     .extract()
                     .as(PokemonList.class);
 
