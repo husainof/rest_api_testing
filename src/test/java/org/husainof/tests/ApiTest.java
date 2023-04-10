@@ -85,7 +85,7 @@ public class ApiTest extends BaseApiTest {
 
         PokemonList pokemonList =  RestAssured.given(requestSpec)
                     .filter(new AllureRestAssured())
-                    .params("limit", limit)
+                    .params("limit", 10)
                     .params("offset", 0)
                 .when()
                     .get()
